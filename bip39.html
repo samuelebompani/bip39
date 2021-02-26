@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bip39</title>
+	</head>
+	<body>
+		<h1>Bip39</h1>
+		<p>A Tool to generate an UNSECURE mnemonic wallet.</p>
+		<p>Strength: 128</p>
+		<button onclick = "Entropy();">
+		click
+		</button>
+		<p id="text"></p>
+		<script>
+			var text = document.getElementById("text");
+			function IntToHexString(integer) {
+				return Number(integer).toString(16);
+			}
+			
+			function Entropy() {
+				var strength = 128;
+				var buffer = new Uint8Array(strength/8);
+				var data = window.crypto.getRandomValues(buffer);
+				var hexs = [];
+				for(i in data){
+					hex = IntToHexString(data[i]);
+					hexs += hex;
+					
+				}
+				data.forEach(IntToHexString);
+				text.innerHTML = "Entropy: "+hexs;
+			}
+		</script>
+	</body>
+</html>
