@@ -21,8 +21,7 @@
 			function HexToBin(hexString) {
 				return parseInt(hexString, 16).toString(2).padStart(8,'0')
 			}
-
-			
+		
 			function hexStringToByte(str) {
 				if (!str) {
 					return new Uint8Array();
@@ -50,7 +49,7 @@
 				return hashHex;
 			}
 			
-			function Entropy() {
+			async function Entropy() {
 				var strength = 128;
 				var buffer = new Uint8Array(strength/8);
 				var data = window.crypto.getRandomValues(buffer);
@@ -66,11 +65,12 @@
 					var uu = bins.slice(11*i,11*(i+1));
 					ids+=parseInt(uu, 2)+" ";
 				}
-				var last = parseInt(bins.slice(121,129),2);
-				var hash = sha256(hexStringToByte(hexs));
-				console.log(hash);
+				var last = bins.slice(121,129);
+				var hash = await sha256(hexStringToByte(hexs));
+				var last = last+HexToBin(hash[0]);
 
-				text.innerHTML = data+"<br>"+"Entropy: "+hexs+"<br>Binary: "+bins+"<br>Keys: "+ids+"<br>Sha256: "+hash;
+				text.innerHTML = data+"<br>"+"Entropy: "+hexs+"<br>Binary: "+bins
+					+"<br>Keys: "+ids+"<br>Sha256: "+hash+"<br>Last: "+last;
 			}
 		</script>
 	</body>
