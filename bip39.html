@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<title>Bip39</title>
 		<link rel="stylesheet" href="style.css">
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 	</head>
 	<body>
 		<h1>Bip39</h1>
@@ -13,7 +16,7 @@
 			<button onclick = "Entropy();"><b>New entropy</b></button>
 		</div><br>
 		
-		<ul id="elements" ></ul>
+		<ul id="elements"></ul>
 		<script>
 			var text = document.getElementById("elements");
 			var words = document.getElementById("words");
@@ -299,7 +302,7 @@
 				text.innerHTML = printLine("Numbers generated",data)
 					+printLine("Entropy", hexs)
 					+printLine("Binary", printArray(bb))
-					+printLine("SHA256", hash)
+					+printLine("Entropy SHA256 first hex number", hash[0])
 					+printLine("Checksum", checksum)
 					+printLine("Last", last+" "+lastIdx)
 					+printLine("All indexes", printArray(ids))
