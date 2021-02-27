@@ -2,14 +2,17 @@
 <html>
 	<head>
 		<title>Bip39</title>
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 		<h1>Bip39</h1>
-		<p>A Tool to generate an UNSECURE mnemonic wallet.</p>
-		<p>Strength: 128</p>
-		<button onclick = "Entropy();">
-		click
-		</button>
+		<div id="info">
+			<p>
+				<h3>A Tool to generate an UNSECURE mnemonic wallet.</h3>
+				Strength: 128</p>
+			<button onclick = "Entropy();"><b>New entropy</b></button>
+		</div><br>
+		
 		<ul id="elements" ></ul>
 		<script>
 			var text = document.getElementById("elements");
@@ -40,24 +43,34 @@
 				const hashBuffer = await window.crypto.subtle.digest('SHA-256', message);
 				const hashArray = Array.from(new Uint8Array(hashBuffer));
 				const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
-				console.log(hashHex);
 				return hashHex;
 			}
 
 			function printLine(tag, value) {
-				return "<li>"+tag+": "+value+"</li>";
+				return "<li><b>"+tag+"</b>: "+value+"</li>";
 			}
-			
+
+			function printArray(array) {
+				res="";
+				for (i in array) {
+					res+=array[i]+" "
+				}
+				return res;
+			}
+
 			async function Entropy() {
 				var strength = 128;
 				var buffer = new Uint8Array(strength/8);
 				var data = window.crypto.getRandomValues(buffer);
 				var hexs = "";
 				var bins = "";
+				var bb = [];
+				
 				for(i in data){
 					hex = IntToHexString(data[i]);
 					hexs += hex;
-					bins += HexToBin(hex)
+					bins += HexToBin(hex);
+					bb.push(HexToBin(hex));
 				}
 				ids=[];
 				for (i=0; i<11; i++){
@@ -285,13 +298,12 @@
 				}
 				text.innerHTML = printLine("Numbers generated",data)
 					+printLine("Entropy", hexs)
-					+printLine("Binary", bins)
+					+printLine("Binary", printArray(bb))
 					+printLine("SHA256", hash)
 					+printLine("Checksum", checksum)
 					+printLine("Last", last+" "+lastIdx)
-					+printLine("All indexes", ids)
-					+printLine("Mnemonic", words);
-				
+					+printLine("All indexes", printArray(ids))
+					+printLine("Mnemonic", printArray(words));		
 			}
 			Entropy();
 		</script>
