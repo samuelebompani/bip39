@@ -13,22 +13,64 @@
 		<p id="text"></p>
 		<script>
 			var text = document.getElementById("text");
+			
 			function IntToHexString(integer) {
-				return Number(integer).toString(16);
+				return Number(integer).toString(16).padStart(2,'0');
+			}
+
+			function HexToBin(hexString) {
+				return parseInt(hexString, 16).toString(2).padStart(8,'0')
+			}
+
+			
+			function hexStringToByte(str) {
+				if (!str) {
+					return new Uint8Array();
+				}
+			
+				var a = [];
+				for (var i = 0, len = str.length; i < len; i+=2) {
+					a.push(parseInt(str.substr(i,2),16));
+				}
+			
+				return new Uint8Array(a);
+			}
+
+			async function sha256(message) {
+			
+				// hash the message
+				const hashBuffer = await window.crypto.subtle.digest('SHA-256', message);
+
+				// convert ArrayBuffer to Array
+				const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+				// convert bytes to hex string
+				const hashHex = hashArray.map(b => ('00' + b.toString(16)).slice(-2)).join('');
+				console.log(hashHex);
+				return hashHex;
 			}
 			
 			function Entropy() {
 				var strength = 128;
 				var buffer = new Uint8Array(strength/8);
 				var data = window.crypto.getRandomValues(buffer);
-				var hexs = [];
+				var hexs = "";
+				var bins = "";
 				for(i in data){
 					hex = IntToHexString(data[i]);
 					hexs += hex;
-					
+					bins += HexToBin(hex)
 				}
-				data.forEach(IntToHexString);
-				text.innerHTML = "Entropy: "+hexs;
+				ids=[];
+				for (i=0; i<11; i++){
+					var uu = bins.slice(11*i,11*(i+1));
+					ids+=parseInt(uu, 2)+" ";
+				}
+				var last = parseInt(bins.slice(121,129),2);
+				var hash = sha256(hexStringToByte(hexs));
+				console.log(hash);
+
+				text.innerHTML = data+"<br>"+"Entropy: "+hexs+"<br>Binary: "+bins+"<br>Keys: "+ids+"<br>Sha256: "+hash;
 			}
 		</script>
 	</body>
